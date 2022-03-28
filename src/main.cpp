@@ -1,58 +1,50 @@
-
-#include <FlexyStepper.h> //test commit
+#include <FlexyStepper.h>
+#include <cstring
 #include <TeensyDMX.h>
-#include "Ticker.h"
+
 namespace teensydmx = ::qindesign::teensydmx;
+
+// Create the DMX receiver on Serial1.
 teensydmx::Receiver dmxRx{Serial1};
-const int MOTOR_STEP_PIN = 2;
-const int MOTOR_DIRECTION_PIN = 3;
-void debug();
-void doStep();
-Ticker timer1(debug, 100, 0, MILLIS);
-Ticker timer2(doStep, 100, 0, MILLIS);
-// Ticker timer3(checkMe, 23, 0, MILLIS);
-FlexyStepper stepper;
-uint16_t LV;
-uint16_t AV;
-uint16_t DV;
-uint16_t CV;
-uint16_t MV;
-//ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+
+FlexyStepper motor1;       // STEP pin: 2, DIR pin: 3
+FlexyStepper motor2;       // STEP pin: 4, DIR pin: 5
+FlexyStepper motor3;       // STEP pin: 6, DIR pin: 7
 void setup()
 {
-  Serial.begin(115200);
-  dmxRx.begin();
-  timer1.start();
-  timer2.start();
-  stepper.connectToPins(MOTOR_STEP_PIN, MOTOR_DIRECTION_PIN);
-  stepper.setSpeedInStepsPerSecond(32 * 500);
-  stepper.setAccelerationInStepsPerSecondPerSecond(32 * 2500);
-}
-void loop()
-{
-  timer1.update();
-  timer2.update();
-  AV = dmxRx.get16Bit(19);
+Serial.begin(115200);
+    motor1.connectToPins(2, 3);
+    motor2.connectToPins(4, 5);
+    motor3.connectToPins(6, 7);
+    dmxRx.begin();
+    
+    motor1.setSpeedInStepsPerSecond(10000000000);
+    motor1.setAccelerationInStepsPerSecondPerSecond(20000);
 
-  
-  delay(10);
+    motor2.setSpeedInStepsPerSecond(10000000000);
+    motor2.setAccelerationInStepsPerSecondPerSecond(20000);
+
+    motor3.setSpeedInStepsPerSecond(10000000000);
+    motor3.setAccelerationInStepsPerSecondPerSecond(20000);
 }
-void debug()
-{
-  Serial.print("time: ");
-  Serial.print(millis()/100);
-  Serial.print("  DMX VAL: ");
-  Serial.print(MV);
-  Serial.print("  pos: ");
-  Serial.println(stepper.getCurrentPositionInSteps());
-}
-void doStep()
-{
-  //  CV = LV + (DV / 24);
-  //  map(AV, 0, 66535, 0, 12800);
-  //  MV = map(CV, 0, 66535, 0, 6400);
-  //  stepper.moveToPositionInSteps(AV);
-  //  LV = CV;
-  MV = map(AV, 0, 66535, 0, 6400);
-  stepper.moveToPositionInSteps(MV);
+void loop() {
+
+
+
+//motor1
+Serial.println(dmxRx.get16Bit(1));
+motor1.setTargetPositionInSteps(dmxRx.get16Bit(1));
+
+//motor2
+Serial.println(dmxRx.get16Bit(3));
+motor2.setTargetPositionInSteps(dmxRx.get16Bit(3));
+
+//motor3
+Serial.println(dmxRx.get16Bit(5));
+motor3.setTargetPositionInSteps(dmxRx.get16Bit(5));
+
+motor1.processMovement();
+motor2.processMovement();
+motor3.processMovement();
+
 }
