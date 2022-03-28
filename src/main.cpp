@@ -1,58 +1,42 @@
-//testClood
-#include <FlexyStepper.h> //test commit
+#include <FlexyStepper.h>
+
+#include <cstring>
+
 #include <TeensyDMX.h>
-#include "Ticker.h"
+
 namespace teensydmx = ::qindesign::teensydmx;
+
+// Create the DMX receiver on Serial1.
 teensydmx::Receiver dmxRx{Serial1};
-const int MOTOR_STEP_PIN = 2;
-const int MOTOR_DIRECTION_PIN = 3;
-void debug();
-void doStep();
-Ticker timer1(debug, 100, 0, MILLIS);
-Ticker timer2(doStep, 100, 0, MILLIS);
-// Ticker timer3(checkMe, 23, 0, MILLIS);
-FlexyStepper stepper;
-uint16_t LV;
-uint16_t AV;
-uint16_t DV;
-uint16_t CV;
-uint16_t MV;
+
+uint16_t lastValue = 0;
+uint16_t Step = 0;
+uint16_t position1 = 0;
+
+int actualValue;
+int oldValue = 0;
+int steppe;
+int posAct;
+int pos;
+FlexyStepper motor;       // STEP pin: 2, DIR pin: 3
+//StepControl controller;    // Use default settings
 
 void setup()
 {
-  Serial.begin(115200);
-  dmxRx.begin();
-  timer1.start();
-  timer2.start();
-  stepper.connectToPins(MOTOR_STEP_PIN, MOTOR_DIRECTION_PIN);
-  stepper.setSpeedInStepsPerSecond(32 * 500);
-  stepper.setAccelerationInStepsPerSecondPerSecond(32 * 2500);
+Serial.begin(115200);
+    motor.connectToPins(2, 3);
+    
+    dmxRx.begin();
+    oldValue = dmxRx.get16Bit(1);
+    motor.setSpeedInStepsPerSecond(10000000000);
+    motor.setAccelerationInStepsPerSecondPerSecond(20000);
 }
-void loop()
-{
-  timer1.update();
-  timer2.update();
-  AV = dmxRx.get16Bit(19);
+void loop() {
 
-  
-  delay(10);
-}
-void debug()
-{
-  Serial.print("time: ");
-  Serial.print(millis()/100);
-  Serial.print("  DMX VAL: ");
-  Serial.print(MV);
-  Serial.print("  pos: ");
-  Serial.println(stepper.getCurrentPositionInSteps());
-}
-void doStep()
-{
-  //  CV = LV + (DV / 24);
-  //  map(AV, 0, 66535, 0, 12800);
-  //  MV = map(CV, 0, 66535, 0, 6400);
-  //  stepper.moveToPositionInSteps(AV);
-  //  LV = CV;
-  MV = map(AV, 0, 66535, 0, 6400);
-  stepper.moveToPositionInSteps(MV);
+int t1= millis();
+Serial.println(dmxRx.get16Bit(1));
+motor.setTargetPositionInSteps(dmxRx.get16Bit(1));
+
+motor.processMovement();
+
 }
