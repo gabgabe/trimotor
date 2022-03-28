@@ -1,0 +1,3 @@
+#define MOT_1_ENDSTOP_PIN 8
+#define MOT_2_ENDSTOP_PIN 9
+#define MOT_3_ENDSTOP_PIN 10
