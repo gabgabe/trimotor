@@ -33,7 +33,9 @@ Serial.begin(115200);
 }
 void loop() {
 
-int t1= millis();
+
+
+
 Serial.println(dmxRx.get16Bit(1));
 motor.setTargetPositionInSteps(dmxRx.get16Bit(1));
 
