@@ -78,12 +78,7 @@ void setup()
     
 }
 
-
-
-
 void loop() {
-
-
 
 //motor1.setCurrentPositionInMillimeters(325);
 
