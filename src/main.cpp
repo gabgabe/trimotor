@@ -21,6 +21,37 @@ teensydmx::Receiver dmxRx{Serial1}; // Create the DMX receiver on Serial1.
 FlexyStepper motor1;
 FlexyStepper motor2;
 FlexyStepper motor3;
+
+boolean homing(FlexyStepper motorToHome, int endPin){
+
+  motorToHome.setAccelerationInStepsPerSecondPerSecond(100000);
+  motorToHome.setSpeedInStepsPerSecond(1000);
+  while(digitalRead(endPin)){
+    motorToHome.moveRelativeInSteps(initial_homing);
+    initial_homing--;
+    motorToHome.processMovement();
+    delay(5);
+  }
+  motorToHome.setCurrentPositionInSteps(0);
+  initial_homing = 1;
+
+  while (!digitalRead(endPin)) { // Make the Stepper move CW until the switch is deactivated
+    motorToHome.setAccelerationInStepsPerSecondPerSecond(10000);
+    motorToHome.setSpeedInStepsPerSecond(1000);
+    motorToHome.moveRelativeInSteps(initial_homing);  
+    initial_homing++;
+    motorToHome.processMovement();
+    delay(5);  
+  }
+
+  motorToHome.setCurrentPositionInSteps(0);
+  return true;
+  
+  Serial.println("Homing Completed");
+  Serial.println("");
+}
+
+
 void setup()
 {
     Serial.begin(115200);
