@@ -1,0 +1,11 @@
+_eseguire homing correttamente
+_calcolare le misure MAX con funzione dedicata
+_funzione di intervento di emergenza
+_aggiunta del pin di ENABLE nel codice
+
+meno importanti:
+_canale di abilitazione (come la chiave per i laser)
+_lettura e scrittura eeprom
+_setup variabili tramite monitor seriale
+_eventuale autoripristino motori anzichè blocco totale (opzionabile)
+_sgancio motori remoto

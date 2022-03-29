@@ -3,17 +3,24 @@
 #include <TeensyDMX.h>
 #include "configurazione.h"
 namespace teensydmx = ::qindesign::teensydmx;
+void systemInitialization(); // esegue l'homing e calcola le distanze massime
 void mot1endstop();
 void mot2endstop();
 void mot3endstop();
-void run();
+void mot4endstop();
+void run();             // stato di run su dmx, equivale all'on-air di uno studio
+void moveMotors();      // processa i movimenti dei 3 motori
+void processMeasures(); // calcola lo spazio possibile e
+#ifdef PROTOTYPE
+teensydmx::Receiver dmxRx{Serial3}; // Create the DMX receiver on Serial1.
+#endif
+#ifdef SVILUPPO
+teensydmx::Receiver dmxRx{Serial1}; // Create the DMX receiver on Serial1.
+#endif
 
-// Create the DMX receiver on Serial1.
-teensydmx::Receiver dmxRx{Serial1};
-
-FlexyStepper motor1; // STEP pin: 2, DIR pin: 3
-FlexyStepper motor2; // STEP pin: 4, DIR pin: 5
-FlexyStepper motor3; // STEP pin: 6, DIR pin: 7
+FlexyStepper motor1;
+FlexyStepper motor2;
+FlexyStepper motor3;
 void setup()
 {
 
@@ -22,33 +29,52 @@ void setup()
     motor2.connectToPins(MOT_2_STEP_PIN, MOT_2_DIR_PIN);
     motor3.connectToPins(MOT_3_STEP_PIN, MOT_3_DIR_PIN);
     dmxRx.begin();
-    motor1.setSpeedInStepsPerSecond(10000000000);
-    motor1.setAccelerationInStepsPerSecondPerSecond(20000);
-    motor2.setSpeedInStepsPerSecond(10000000000);
-    motor2.setAccelerationInStepsPerSecondPerSecond(20000);
-    motor3.setSpeedInStepsPerSecond(10000000000);
-    motor3.setAccelerationInStepsPerSecondPerSecond(20000);
+    motor1.setStepsPerMillimeter(MOT_1_STEPS_PER_MM);
+    motor2.setStepsPerMillimeter(MOT_2_STEPS_PER_MM);
+    motor3.setStepsPerMillimeter(MOT_3_STEPS_PER_MM);
+
+    motor1.setSpeedInMillimetersPerSecond(MOT_1_SPEED);
+    motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED);
+    motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED);
+
+    motor1.setAccelerationInMillimetersPerSecondPerSecond(MOT_1_ACCEL);
+    motor2.setAccelerationInMillimetersPerSecondPerSecond(MOT_2_ACCEL);
+    motor3.setAccelerationInMillimetersPerSecondPerSecond(MOT_3_ACCEL);
+    systemInitialization();
 }
 void loop()
 {
+    run();
+}
 
-    // motor1
-    Serial.println(dmxRx.get16Bit(1));
-    motor1.setTargetPositionInSteps(dmxRx.get16Bit(1));
-
-    // motor2
-    Serial.println(dmxRx.get16Bit(3));
-    motor2.setTargetPositionInSteps(dmxRx.get16Bit(3));
-
-    // motor3
-    Serial.println(dmxRx.get16Bit(5));
-    motor3.setTargetPositionInSteps(dmxRx.get16Bit(5));
-
+void run()
+{
+    processMeasures();
+    moveMotors();
+}
+void moveMotors()
+{
+    motor1.setTargetPositionInMillimeters(A);
+    motor2.setTargetPositionInMillimeters(B);
+    motor3.setTargetPositionInMillimeters(C);
     motor1.processMovement();
     motor2.processMovement();
     motor3.processMovement();
-    }
-
+}
+void processMeasures()
+{
+    A = dmxRx.get16Bit(dmxStartChannel);
+    B = dmxRx.get16Bit(dmxStartChannel + 2);
+    C = dmxRx.get16Bit(dmxStartChannel + 4);
+    map(A, 0, 65535, A_MIN, A_MAX);
+    map(B, 0, 65535, B_MIN, B_MAX);
+    map(C, 0, 65535, C_MIN, C_MAX);
+    A = constrain(A, A_MIN, B);
+    B = constrain(B, A, C);
+    C = constrain(C, B, C_MAX);
+}
 void mot1endstop() {}
 void mot2endstop() {}
 void mot3endstop() {}
+void mot4endstop() {}
+void systemInitialization() {}
