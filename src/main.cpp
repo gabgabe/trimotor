@@ -23,7 +23,6 @@ FlexyStepper motor2;
 FlexyStepper motor3;
 void setup()
 {
-
     Serial.begin(115200);
     motor1.connectToPins(MOT_1_STEP_PIN, MOT_1_DIR_PIN);
     motor2.connectToPins(MOT_2_STEP_PIN, MOT_2_DIR_PIN);
@@ -54,9 +53,9 @@ void run()
 }
 void moveMotors()
 {
-    motor1.setTargetPositionInMillimeters(A);
-    motor2.setTargetPositionInMillimeters(B);
-    motor3.setTargetPositionInMillimeters(C);
+    motor1.setTargetPositionInMillimeters(pA);
+    motor2.setTargetPositionInMillimeters(pB);
+    motor3.setTargetPositionInMillimeters(pC);
     motor1.processMovement();
     motor2.processMovement();
     motor3.processMovement();
@@ -64,14 +63,30 @@ void moveMotors()
 void processMeasures()
 {
     A = dmxRx.get16Bit(dmxStartChannel);
+    //    Serial.print("    CH1 :  ");
+    //    Serial.print(A);
     B = dmxRx.get16Bit(dmxStartChannel + 2);
+    //    Serial.print("    CH3 :  ");
+    //    Serial.print(B);
     C = dmxRx.get16Bit(dmxStartChannel + 4);
-    map(A, 0, 65535, A_MIN, A_MAX);
-    map(B, 0, 65535, B_MIN, B_MAX);
-    map(C, 0, 65535, C_MIN, C_MAX);
-    A = constrain(A, A_MIN, B);
-    B = constrain(B, A, C);
-    C = constrain(C, B, C_MAX);
+    //    Serial.print("    CH5 :  ");
+    //    Serial.println(C);
+
+    A = map(A, 0, 65535, A_MIN, A_MAX);
+    B = map(B, 0, 65535, B_MIN, B_MAX);
+    C = map(C, 0, 65535, C_MIN, C_MAX);
+
+    pA = constrain(A, A_MIN, pB);
+    pB = constrain(B, pA, pC);
+    pC = constrain(C, pB, C_MAX);
+/*
+    Serial.print("    CH1 :  ");
+    Serial.print(pA);
+    Serial.print("    CH3 :  ");
+    Serial.print(pB);
+    Serial.print("    CH5 :  ");
+    Serial.println(pC);
+    */
 }
 void mot1endstop() {}
 void mot2endstop() {}

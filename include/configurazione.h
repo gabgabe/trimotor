@@ -1,10 +1,7 @@
-#define SVILUPPO //PROTOTYPE per pcb Delio || SVILUPPO per default
-
-
-
+#define SVILUPPO // PROTOTYPE per pcb Delio || SVILUPPO per default
 
 #ifdef PROTOTYPE
-//configurazione IO
+// configurazione IO
 #define MOT_1_STEP_PIN 37
 #define MOT_1_DIR_PIN 38
 #define MOT_1_EN_PIN 36
@@ -23,7 +20,7 @@
 #define DOWN_ENDSTOP_PIN 1
 #endif
 #ifdef SVILUPPO
-//configurazione IO
+// configurazione IO
 #define MOT_1_STEP_PIN 2
 #define MOT_1_DIR_PIN 3
 #define MOT_1_EN_PIN 4
@@ -42,31 +39,33 @@
 #define DOWN_ENDSTOP_PIN 14
 #endif
 
-
-//configurazione DMX
+// configurazione DMX
 #define dmxStartChannel 1
 
-//configurazione stepper
-#define MOT_1_STEPS_PER_MM  400.0
-#define MOT_2_STEPS_PER_MM  400.0
-#define MOT_3_STEPS_PER_MM  400.0
-#define MOT_1_SPEED 5000.0 
-#define MOT_2_SPEED 5000.0 
-#define MOT_3_SPEED 5000.0 
-#define MOT_1_ACCEL 1000.0 
-#define MOT_2_ACCEL 1000.0 
-#define MOT_3_ACCEL 1000.0 
+// configurazione stepper
+#define MOT_1_STEPS_PER_MM 50.0 // step/mm
+#define MOT_2_STEPS_PER_MM 50.0 // step/mm
+#define MOT_3_STEPS_PER_MM 50.0 // step/mm
+#define MOT_1_SPEED 5000.0      // mm/s
+#define MOT_2_SPEED 5000.0      // mm/s
+#define MOT_3_SPEED 5000.0      // mm/s
+#define MOT_1_ACCEL 500.0       // mm/s2
+#define MOT_2_ACCEL 500.0       // mm/s2
+#define MOT_3_ACCEL 500.0       // mm/s2
 
-//sistema
-uint16_t A; //variabile interna
-uint16_t B; //variabile interna
-uint16_t C; //variabile interna
+// sistema
+uint16_t A; // variabile interna
+uint16_t B; // variabile interna
+uint16_t C; // variabile interna
+uint16_t pA; // variabile interna
+uint16_t pB; // variabile interna
+uint16_t pC; // variabile interna
 uint16_t A_MIN = 0;
 uint16_t B_MIN = 0;
 uint16_t C_MIN = 0;
 uint16_t A_MAX = 100;
 uint16_t B_MAX = 100;
 uint16_t C_MAX = 100;
-uint16_t UNDER_A_OFFSET = 0; //Gap aggiuntivo tra carrello inferiore e pavimento
-uint16_t BETWEEN_B_OFFSET = 0; //gap aggiuntivo tra carrello centrale e i due esterni
-uint16_t OVER_C_OFFSET = 0; //gap aggiuntivo tra carrello superiore e soffitto
+uint16_t UNDER_A_OFFSET = 0;   // Gap aggiuntivo tra carrello inferiore e pavimento
+uint16_t BETWEEN_B_OFFSET = 0; // gap aggiuntivo tra carrello centrale e i due esterni
+uint16_t OVER_C_OFFSET = 0;    // gap aggiuntivo tra carrello superiore e soffitto
