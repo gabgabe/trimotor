@@ -24,29 +24,29 @@ boolean home;
 long initial_homing = -1;
 int move_finished = 1;
 
-boolean homing(){
+boolean homing(FlexyStepper motorToHome){
 
-  motor1.setAccelerationInStepsPerSecondPerSecond(100000);
-  motor1.setSpeedInStepsPerSecond(1000);
+  motorToHome.setAccelerationInStepsPerSecondPerSecond(100000);
+  motorToHome.setSpeedInStepsPerSecond(1000);
   while(digitalRead(pin8)){
-    motor1.moveRelativeInSteps(initial_homing);
+    motorToHome.moveRelativeInSteps(initial_homing);
     initial_homing--;
-    motor1.processMovement();
+    motorToHome.processMovement();
     delay(5);
   }
-  motor1.setCurrentPositionInSteps(0);
+  motorToHome.setCurrentPositionInSteps(0);
   initial_homing = 1;
 
   while (!digitalRead(pin8)) { // Make the Stepper move CW until the switch is deactivated
-    motor1.setAccelerationInStepsPerSecondPerSecond(10000);
-    motor1.setSpeedInStepsPerSecond(1000);
-    motor1.moveRelativeInSteps(initial_homing);  
+    motorToHome.setAccelerationInStepsPerSecondPerSecond(10000);
+    motorToHome.setSpeedInStepsPerSecond(1000);
+    motorToHome.moveRelativeInSteps(initial_homing);  
     initial_homing++;
-    motor1.processMovement();
+    motorToHome.processMovement();
     delay(5);  
   }
 
-  motor1.setCurrentPositionInSteps(0);
+  motorToHome.setCurrentPositionInSteps(0);
   return true;
   
   Serial.println("Homing Completed");
@@ -64,7 +64,7 @@ void setup()
     motor3.connectToPins(6, 7);
     dmxRx.begin();
     
-    homingFinished = homing();
+    homingFinished = homing(motor1);
 
     motor1.setSpeedInStepsPerSecond(10000000000);
     motor1.setAccelerationInStepsPerSecondPerSecond(20000);
