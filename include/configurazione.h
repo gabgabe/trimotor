@@ -69,3 +69,6 @@ uint16_t C_MAX = 100;
 uint16_t UNDER_A_OFFSET = 0;   // Gap aggiuntivo tra carrello inferiore e pavimento
 uint16_t BETWEEN_B_OFFSET = 0; // gap aggiuntivo tra carrello centrale e i due esterni
 uint16_t OVER_C_OFFSET = 0;    // gap aggiuntivo tra carrello superiore e soffitto
+long initial_homing = -1;
+int move_finished = 1;
+boolean homingFinished = false;
