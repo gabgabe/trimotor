@@ -1,26 +1,26 @@
 # trimotor
 
-TO DO LIST per completare il codice base \
-- [x] eseguire homing correttamente \
+TO DO LIST per completare il codice base 
+- [x] eseguire homing correttamente 
 - [ ] calcolare le misure MAX con funzione dedicata
-- [ ] aggiunta del pin di ENABLE nel codice \
-- [ ] bool se presente o meno DMX \
-- [ ] canale di consenso movimento (in modalità safe run ignora il canale di setup e comandi in serial monitor, modalità programmer ascolta anche il canale di setup) \
-- [ ] canale di setup (attivo solo in modalità programmatore o standby) \
-- [ ] lettura e scrittura eeprom \
-- [ ] setup variabili tramite monitor seriale\
-- [ ] funzione di intervento di emergenza (fungo)\
-- [ ] sgancio motori remoto\
+- [ ] aggiunta del pin di ENABLE nel codice 
+- [ ] bool se presente o meno DMX 
+- [ ] canale di consenso movimento (in modalità safe run ignora il canale di setup e comandi in serial monitor, modalità programmer ascolta anche il canale di setup) 
+- [ ] canale di setup (attivo solo in modalità programmatore o standby) 
+- [ ] lettura e scrittura eeprom 
+- [ ] setup variabili tramite monitor seriale
+- [ ] funzione di intervento di emergenza (fungo)
+- [ ] sgancio motori remoto
 
-features del canale di setup:\
-- [ ] system reset (homing motori e ritorno in run)\
-- [ ] enble RDM\
+features del canale di setup:
+- [ ] system reset (homing motori e ritorno in run)
+- [ ] enble RDM
 - [ ] disable RDM\
-- [ ] offset cuscinetto ON\
-- [ ] offset cuscinetto OFF\
-- [ ] disabilitazione motori (ne consegue una richiesta di system reset)\
-- [ ] timeout DMX ON\
-- [ ] timeout DMX OFF\
+- [ ] offset cuscinetto ON
+- [ ] offset cuscinetto OFF
+- [ ] disabilitazione motori (ne consegue una richiesta di system reset)
+- [ ] timeout DMX ON
+- [ ] timeout DMX OFF
 
 LOGICA DEL SISTEMA:\
 1> power on\

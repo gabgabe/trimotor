@@ -22,7 +22,7 @@ FlexyStepper motor1;
 FlexyStepper motor2;
 FlexyStepper motor3;
 
-boolean homing(FlexyStepper motorToHome, int endPin, int8_t direction)
+boolean homing(FlexyStepper motorToHome, int endPin, int direction)
 {
     motorToHome.setAccelerationInMillimetersPerSecondPerSecond(MOT_HOMING_ACCEL);
     motorToHome.setSpeedInMillimetersPerSecond(MOT_HOMING_SPEED);
@@ -38,11 +38,9 @@ boolean homing(FlexyStepper motorToHome, int endPin, int8_t direction)
         motorToHome.setTargetPositionInMillimeters(MOT_HOMING_MAX_DISTANCE * direction);
         motorToHome.processMovement();
     }
-
     motorToHome.setCurrentPositionInMillimeters(0);
     Serial.println("Homing Completed");
     Serial.println("");
-
     return true;
 }
 void setup()
@@ -137,6 +135,5 @@ void systemInitialization()
             }
         }
     }
-    else
-        break;
+
 }

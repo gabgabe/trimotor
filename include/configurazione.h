@@ -56,9 +56,9 @@
 #define MOT_3_ACCEL 100.0       // mm/s2
 #define MOT_HOMING_ACCEL 100.0       // mm/s2
 #define MOT_HOMING_MAX_DISTANCE 3000 //mm
-#define MOT_1_DIRECTION -1;
-#define MOT_2_DIRECTION -1;
-#define MOT_3_DIRECTION -1;
+#define MOT_1_DIRECTION -1
+#define MOT_2_DIRECTION -1
+#define MOT_3_DIRECTION -1
 
 
 
