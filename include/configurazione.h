@@ -48,19 +48,17 @@
 #define MOT_1_STEPS_PER_MM 80.0 // step/mm
 #define MOT_2_STEPS_PER_MM 80.0 // step/mm
 #define MOT_3_STEPS_PER_MM 80.0 // step/mm
-#define MOT_1_SPEED 400.0      // mm/s
-#define MOT_2_SPEED 200.0      // mm/s
-#define MOT_3_SPEED 200.0      // mm/s
+#define MOT_1_SPEED 500.0      // mm/s
+#define MOT_2_SPEED 500.0      // mm/s
+#define MOT_3_SPEED 500.0      // mm/s
 #define MOT_HOMING_SPEED 50.0      // mm/s
 
-#define MOT_1_ACCEL 400.0       // mm/s2
-#define MOT_2_ACCEL 50.0       // mm/s2
-#define MOT_3_ACCEL 50.0       // mm/s2
+#define MOT_1_ACCEL 500.0       // mm/s2
+#define MOT_2_ACCEL 500.0       // mm/s2
+#define MOT_3_ACCEL 500.0       // mm/s2
 #define MOT_HOMING_ACCEL 100.0       // mm/s2
 #define MOT_HOMING_MAX_DISTANCE 3000 //mm
-#define MOT_1_DIRECTION -1
-#define MOT_2_DIRECTION -1
-#define MOT_3_DIRECTION -1
+
 
 
 
@@ -74,7 +72,7 @@ uint16_t pC; // variabile interna
 uint16_t A_MIN = 0;
 uint16_t B_MIN = 0;
 uint16_t C_MIN = 0;
-uint16_t A_MAX = 1800;
+uint16_t A_MAX = 900;
 uint16_t B_MAX = 1800;
 uint16_t C_MAX = 1800;
 uint16_t UNDER_A_OFFSET = 0;   // Gap aggiuntivo tra carrello inferiore e pavimento
