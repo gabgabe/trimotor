@@ -1,4 +1,6 @@
 #define PROTOTYPE // PROTOTYPE per pcb Delio || SVILUPPO per default
+//#define DEBUG_ON
+#define ONEMOTOR
 
 #ifdef PROTOTYPE
 // configurazione IO
@@ -33,10 +35,10 @@
 #define MOT_3_DIR_PIN 9
 #define MOT_3_EN_PIN 10
 
-#define UP_ENDSTOP_PIN 11
-#define MID_UP_ENDSTOP_PIN 12
-#define MID_DOWN_ENDSTOP_PIN 13
-#define DOWN_ENDSTOP_PIN 14
+#define ENDSTOP_UP_PIN 12
+#define ENDSTOP_MID_UP_PIN 13
+#define ENDSTOP_MID_DOWN_PIN 14
+#define ENDSTOP_DOWN_PIN 15
 #endif
 
 // configurazione DMX
@@ -46,14 +48,14 @@
 #define MOT_1_STEPS_PER_MM 80.0 // step/mm
 #define MOT_2_STEPS_PER_MM 80.0 // step/mm
 #define MOT_3_STEPS_PER_MM 80.0 // step/mm
-#define MOT_1_SPEED 100.0      // mm/s
-#define MOT_2_SPEED 100.0      // mm/s
-#define MOT_3_SPEED 100.0      // mm/s
+#define MOT_1_SPEED 400.0      // mm/s
+#define MOT_2_SPEED 200.0      // mm/s
+#define MOT_3_SPEED 200.0      // mm/s
 #define MOT_HOMING_SPEED 50.0      // mm/s
 
-#define MOT_1_ACCEL 100.0       // mm/s2
-#define MOT_2_ACCEL 100.0       // mm/s2
-#define MOT_3_ACCEL 100.0       // mm/s2
+#define MOT_1_ACCEL 400.0       // mm/s2
+#define MOT_2_ACCEL 50.0       // mm/s2
+#define MOT_3_ACCEL 50.0       // mm/s2
 #define MOT_HOMING_ACCEL 100.0       // mm/s2
 #define MOT_HOMING_MAX_DISTANCE 3000 //mm
 #define MOT_1_DIRECTION -1
