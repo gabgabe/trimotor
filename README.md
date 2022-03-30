@@ -11,6 +11,8 @@ TO DO LIST per completare il codice base
 - [ ] setup variabili tramite monitor seriale
 - [ ] funzione di intervento di emergenza (fungo)
 - [ ] sgancio motori remoto
+- [ ] registrazione dmx su SD per playback in standalone
+- [ ] protocollo di play memorie su SD con sync master slave tra controller
 
 features del canale di setup:
 - [ ] system reset (homing motori e ritorno in run)
