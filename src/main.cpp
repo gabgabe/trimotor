@@ -8,7 +8,7 @@ void systemInitialization(); // esegue l'homing e calcola le distanze massime
 void run();                  // stato di run su dmx, equivale all'on-air di uno studio
 void moveMotors();           // processa i movimenti dei 3 motori
 void processMeasures();      // calcola lo spazio possibile e
-
+void getDmx();
 
 boolean debounce(int btnPin, FlexyStepper motorInDebounce)
 {
@@ -93,7 +93,8 @@ void loop()
 }
 void run()
 {
-    processMeasures();
+    getDmx();
+    processMeasures(); //processMeasures(motore1, motore2, motore3); || processMeasures(motore1, motore2, motore3, cuscinetto);
     moveMotors();
 }
 void moveMotors()
@@ -105,22 +106,19 @@ void moveMotors()
     motor2.processMovement();
     motor3.processMovement();
 }
-void processMeasures()
+void processMeasures() //processMeasures(motore1, motore2, motore3) || processMeasures(motore1, motore2, motore3, cuscinetto)
 {
-    A = dmxRx.get16Bit(dmxStartChannel);
-    B = dmxRx.get16Bit(dmxStartChannel + 2);
-    C = dmxRx.get16Bit(dmxStartChannel + 4);
-    A = map(A, 0, 65535, A_MIN, A_MAX);
-    B = map(B, 0, 65535, B_MIN, B_MAX);
-    C = map(C, 0, 65535, C_MIN, C_MAX);
-    pA = constrain(A, A_MIN, pB);
-    pB = constrain(B, pA, pC);
-    pC = constrain(C, pB, C_MAX);
+    A = map(A, 0, 65535, A_MIN, A_MAX); //con calcolo cuscinetto
+    B = map(B, 0, 65535, B_MIN, B_MAX); //con calcolo cuscinetto
+    C = map(C, 0, 65535, C_MIN, C_MAX); //con calcolo cuscinetto
+    pA = constrain(A, A_MIN, pB);       //con calcolo cuscinetto
+    pB = constrain(B, pA, pC);          //con calcolo cuscinetto
+    pC = constrain(C, pB, C_MAX);       //con calcolo cuscinetto
 }
 void systemInitialization()
 {
     if (homing(motor1, ENDSTOP_DOWN_PIN, MOT_1_DIRECTION))
-    { 
+    { /*
             delay(500);
             if (homing(motor2, ENDSTOP_MID_DOWN_PIN, MOT_2_DIRECTION))
             {
@@ -130,7 +128,7 @@ void systemInitialization()
                     motors_initialized = true;
                     delay(500);
                 }
-            }
+            }*/
     }
     delay(1000);
 
@@ -147,4 +145,8 @@ void systemInitialization()
     motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED);
     motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED);
 }
-void 
+void getDmx(){
+    A = dmxRx.get16Bit(dmxStartChannel);
+    B = dmxRx.get16Bit(dmxStartChannel + 2);
+    C = dmxRx.get16Bit(dmxStartChannel + 4);
+}
