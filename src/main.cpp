@@ -47,11 +47,15 @@ boolean homing(FlexyStepper motorToHome){
   }
 
   motorToHome.setCurrentPositionInSteps(0);
-  return true;
   
   Serial.println("Homing Completed");
   Serial.println("");
+
+  return true;
+
 }
+  
+
 
 void setup()
 {
@@ -95,8 +99,10 @@ Serial.println(dmxRx.get16Bit(5));
 motor3.setTargetPositionInSteps(dmxRx.get16Bit(5));
 
 
-if(homingFinished){
-  motor1.processMovement();
+if(homingFinished && !pin8){
+  motor1.processMovement() else
+  Serial.println("muovi il motore manualmente");
+  delay(5000);
 }
 motor2.processMovement();
 motor3.processMovement();
