@@ -1,8 +1,8 @@
-#define PROTOTYPE // PROTOTYPE per pcb Delio || SVILUPPO per default
+#define MAINBOARD // PROTOTYPE per pcb Delio || SVILUPPO per default
 //#define DEBUG_ON
 #define ONEMOTOR
 
-#ifdef PROTOTYPE
+#ifdef MAINBOARD
 // configurazione IO
 #define MOT_1_STEP_PIN 37
 #define MOT_1_DIR_PIN 38
@@ -21,7 +21,7 @@
 #define ENDSTOP_MID_DOWN_PIN 3
 #define ENDSTOP_DOWN_PIN 4
 #endif
-#ifdef SVILUPPO
+#ifdef PROTO
 // configurazione IO
 #define MOT_1_STEP_PIN 2
 #define MOT_1_DIR_PIN 3
@@ -59,10 +59,17 @@
 #define MOT_HOMING_ACCEL 100.0       // mm/s2
 #define MOT_HOMING_MAX_DISTANCE 3000 //mm
 
+int16_t MOT_1_DIRECTION = -1;
+int16_t MOT_2_DIRECTION = -1;
+int16_t MOT_3_DIRECTION = -1;
 
+int ledState = HIGH;       // the current state of the output pin
+int buttonState;           // the current reading from the input pin
+int lastButtonState = LOW; // the previous reading from the input pin
+unsigned long lastDebounceTime = 0; // the last time the output pin was toggled
+unsigned long debounceDelay = 10;   // the debounce time; increase if the output flickers
 
-
-// sistema
+// variabili di sistema
 uint16_t A; // variabile interna
 uint16_t B; // variabile interna
 uint16_t C; // variabile interna
@@ -72,13 +79,25 @@ uint16_t pC; // variabile interna
 uint16_t A_MIN = 0;
 uint16_t B_MIN = 0;
 uint16_t C_MIN = 0;
-uint16_t A_MAX = 900;
-uint16_t B_MAX = 1800;
-uint16_t C_MAX = 1800;
-uint16_t UNDER_A_OFFSET = 0;   // Gap aggiuntivo tra carrello inferiore e pavimento
+uint16_t A_MAX = 1800; //altezza massima motore A
+uint16_t B_MAX = 1800; //altezza massima motore B
+uint16_t C_MAX = 1800; //altezza massima motore C
+uint16_t UNDER_A_OFFSET = 0;   // gap aggiuntivo tra carrello inferiore e pavimento
 uint16_t BETWEEN_B_OFFSET = 0; // gap aggiuntivo tra carrello centrale e i due esterni
 uint16_t OVER_C_OFFSET = 0;    // gap aggiuntivo tra carrello superiore e soffitto
+uint16_t CUSCINETTO = 0;       // come i tre sopra, misura unificata 
 long initial_homing = 1;
 int move_finished = 1;
 boolean system_ready = false;
 boolean motors_initialized = false;
+
+namespace teensydmx = ::qindesign::teensydmx;
+#ifdef MAINBOARD
+teensydmx::Receiver dmxRx{Serial3}; // Create the DMX receiver on Serial1.
+#endif
+#ifdef PROTO
+teensydmx::Receiver dmxRx{Serial1}; // Create the DMX receiver on Serial1.
+#endif
+FlexyStepper motor1;
+FlexyStepper motor2;
+FlexyStepper motor3;
