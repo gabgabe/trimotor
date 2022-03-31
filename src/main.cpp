@@ -3,32 +3,12 @@
 #include <cstring>
 #include <TeensyDMX.h>
 #include "configurazione.h"
-namespace teensydmx = ::qindesign::teensydmx;
+
 void systemInitialization(); // esegue l'homing e calcola le distanze massime
 void run();                  // stato di run su dmx, equivale all'on-air di uno studio
 void moveMotors();           // processa i movimenti dei 3 motori
 void processMeasures();      // calcola lo spazio possibile e
-int16_t MOT_1_DIRECTION = -1;
-int16_t MOT_2_DIRECTION = -1;
-int16_t MOT_3_DIRECTION = -1;
 
-int ledState = HIGH;       // the current state of the output pin
-int buttonState;           // the current reading from the input pin
-int lastButtonState = LOW; // the previous reading from the input pin
-
-unsigned long lastDebounceTime = 0; // the last time the output pin was toggled
-unsigned long debounceDelay = 10;   // the debounce time; increase if the output flickers
-
-#ifdef PROTOTYPE
-teensydmx::Receiver dmxRx{Serial3}; // Create the DMX receiver on Serial1.
-// teensydmx::Sender dmxTx{Serial1}; // Create the DMX receiver on Serial1.
-#endif
-#ifdef SVILUPPO
-teensydmx::Receiver dmxRx{Serial1}; // Create the DMX receiver on Serial1.
-#endif
-FlexyStepper motor1;
-FlexyStepper motor2;
-FlexyStepper motor3;
 
 boolean debounce(int btnPin, FlexyStepper motorInDebounce)
 {
@@ -137,11 +117,10 @@ void processMeasures()
     pB = constrain(B, pA, pC);
     pC = constrain(C, pB, C_MAX);
 }
-
 void systemInitialization()
 {
     if (homing(motor1, ENDSTOP_DOWN_PIN, MOT_1_DIRECTION))
-    { /*
+    { 
             delay(500);
             if (homing(motor2, ENDSTOP_MID_DOWN_PIN, MOT_2_DIRECTION))
             {
@@ -151,7 +130,7 @@ void systemInitialization()
                     motors_initialized = true;
                     delay(500);
                 }
-            }*/
+            }
     }
     delay(1000);
 
@@ -168,3 +147,4 @@ void systemInitialization()
     motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED);
     motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED);
 }
+void 
