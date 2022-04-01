@@ -124,8 +124,8 @@ void processMeasures() //processMeasures(motore1, motore2, motore3) || processMe
     A = map(A, 0, 65535, A_MIN, A_MAX); //con calcolo cuscinetto
     B = map(B, 0, 65535, B_MIN, B_MAX); //con calcolo cuscinetto
     C = map(C, 0, 65535, C_MIN, C_MAX); //con calcolo cuscinetto
-    pA = constrain(A, A_MIN, pB+1);       //con calcolo cuscinetto
-    pB = constrain(B, pA, pC);          //con calcolo cuscinetto
+    pA = constrain(A, A_MIN, pB);       //con calcolo cuscinetto
+    pB = constrain(B, pA-1, pC+1);      //con calcolo cuscinetto
     pC = constrain(C, pB, C_MAX);       //con calcolo cuscinetto
 }
 void systemInitialization()
@@ -174,9 +174,9 @@ void systemInitialization()
         else
         motor1.moveToPositionInMillimeters(A_MAX / 2 * MOT_1_DIRECTION);   
     
-    motor1.setSpeedInMillimetersPerSecond(MOT_1_SPEED); // reimposto i valori di default dopo homing
-    motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED);
-    motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED);
+    motor1.setSpeedInMillimetersPerSecond(MOT_1_SPEED/3); // reimposto i valori di default dopo homing
+    motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED/3);
+    motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED/3);
 }
 void getDmx(){
     A = dmxRx.get16Bit(dmxStartChannel);
@@ -196,9 +196,9 @@ bool getDmxPresence(){
 
 void testMotors(){
 
-    motor1.setSpeedInMillimetersPerSecond(MOT_1_SPEED / 4); // reimposto i valori di default dopo homing
-    motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED / 4);
-    motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED / 4);
+    motor1.setSpeedInMillimetersPerSecond(MOT_1_SPEED / 2); // reimposto i valori di default dopo homing
+    motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED / 2);
+    motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED / 2);
     motor1.setAccelerationInMillimetersPerSecondPerSecond(MOT_1_ACCEL);
     motor2.setAccelerationInMillimetersPerSecondPerSecond(MOT_2_ACCEL);
     motor3.setAccelerationInMillimetersPerSecondPerSecond(MOT_3_ACCEL);
