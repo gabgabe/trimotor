@@ -60,8 +60,8 @@
 #define MOT_HOMING_MAX_DISTANCE 3000 //mm
 
 int16_t MOT_1_DIRECTION = -1;
-int16_t MOT_2_DIRECTION = -1;
-int16_t MOT_3_DIRECTION = -1;
+int16_t MOT_2_DIRECTION = 1;
+int16_t MOT_3_DIRECTION = 1;
 
 int ledState = HIGH;       // the current state of the output pin
 int buttonState;           // the current reading from the input pin
