@@ -20,6 +20,8 @@
 #define ENDSTOP_MID_UP_PIN 2
 #define ENDSTOP_MID_DOWN_PIN 3
 #define ENDSTOP_DOWN_PIN 4
+
+byte DMXPin = 24;
 #endif
 #ifdef PROTO
 // configurazione IO
@@ -48,14 +50,14 @@
 #define MOT_1_STEPS_PER_MM 80.0 // step/mm
 #define MOT_2_STEPS_PER_MM 80.0 // step/mm
 #define MOT_3_STEPS_PER_MM 80.0 // step/mm
-#define MOT_1_SPEED 500.0      // mm/s
-#define MOT_2_SPEED 500.0      // mm/s
-#define MOT_3_SPEED 500.0      // mm/s
+#define MOT_1_SPEED 400.0      // mm/s
+#define MOT_2_SPEED 400.0      // mm/s
+#define MOT_3_SPEED 400.0      // mm/s
 #define MOT_HOMING_SPEED 50.0      // mm/s
 
-#define MOT_1_ACCEL 500.0       // mm/s2
-#define MOT_2_ACCEL 500.0       // mm/s2
-#define MOT_3_ACCEL 500.0       // mm/s2
+#define MOT_1_ACCEL 400.0       // mm/s2
+#define MOT_2_ACCEL 400.0       // mm/s2
+#define MOT_3_ACCEL 400.0       // mm/s2
 #define MOT_HOMING_ACCEL 100.0       // mm/s2
 #define MOT_HOMING_MAX_DISTANCE 3000 //mm
 
@@ -69,19 +71,26 @@ int lastButtonState = LOW; // the previous reading from the input pin
 unsigned long lastDebounceTime = 0; // the last time the output pin was toggled
 unsigned long debounceDelay = 10;   // the debounce time; increase if the output flickers
 
+//struct motori
+/*
+struct MOT_1  {int8_t MOT_1_EN_PIN; int8_t ENDSTOP_DOWN_PIN; int8_t MOT_1_DIRECTION };
+struct MOT_2  {int8_t MOT_2_EN_PIN; int8_t ENDSTOP_MID_DOWN_PIN; int8_t MOT_2_DIRECTION };
+struct MOT_3  {int8_t MOT_3_EN_PIN; int8_t ENDSTOP_MID_UP_PIN; int8_t MOT_3_DIRECTION };
+*/
 // variabili di sistema
-uint16_t A; // variabile interna
-uint16_t B; // variabile interna
-uint16_t C; // variabile interna
-uint16_t pA; // variabile interna
-uint16_t pB; // variabile interna
-uint16_t pC; // variabile interna
+uint16_t A = 0; // variabile interna
+uint16_t B = 0; // variabile interna
+uint16_t C = 0; // variabile interna
+uint16_t pA = 0; // variabile interna
+uint16_t pB = 0; // variabile interna
+uint16_t pC = 0; // variabile interna
 uint16_t A_MIN = 0;
 uint16_t B_MIN = 0;
 uint16_t C_MIN = 0;
 uint16_t A_MAX = 1800; //altezza massima motore A
 uint16_t B_MAX = 1800; //altezza massima motore B
 uint16_t C_MAX = 1800; //altezza massima motore C
+int16_t HOMING_OFFSET = 50;
 uint16_t UNDER_A_OFFSET = 0;   // gap aggiuntivo tra carrello inferiore e pavimento
 uint16_t BETWEEN_B_OFFSET = 0; // gap aggiuntivo tra carrello centrale e i due esterni
 uint16_t OVER_C_OFFSET = 0;    // gap aggiuntivo tra carrello superiore e soffitto
@@ -101,3 +110,4 @@ teensydmx::Receiver dmxRx{Serial1}; // Create the DMX receiver on Serial1.
 FlexyStepper motor1;
 FlexyStepper motor2;
 FlexyStepper motor3;
+
