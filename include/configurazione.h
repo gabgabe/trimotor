@@ -48,14 +48,14 @@
 #define MOT_1_STEPS_PER_MM 80.0 // step/mm
 #define MOT_2_STEPS_PER_MM 80.0 // step/mm
 #define MOT_3_STEPS_PER_MM 80.0 // step/mm
-#define MOT_1_SPEED 400.0      // mm/s
-#define MOT_2_SPEED 400.0      // mm/s
-#define MOT_3_SPEED 400.0      // mm/s
+#define MOT_1_SPEED 200.0      // mm/s
+#define MOT_2_SPEED 200.0      // mm/s
+#define MOT_3_SPEED 200.0      // mm/s
 #define MOT_HOMING_SPEED 50.0      // mm/s
 
-#define MOT_1_ACCEL 400.0       // mm/s2
-#define MOT_2_ACCEL 400.0       // mm/s2
-#define MOT_3_ACCEL 400.0       // mm/s2
+#define MOT_1_ACCEL 200.0       // mm/s2
+#define MOT_2_ACCEL 200.0       // mm/s2
+#define MOT_3_ACCEL 200.0       // mm/s2
 #define MOT_HOMING_ACCEL 100.0       // mm/s2
 #define MOT_HOMING_MAX_DISTANCE 3000 //mm
 
@@ -79,6 +79,7 @@ struct MOT_3  {int8_t MOT_3_EN_PIN; int8_t ENDSTOP_MID_UP_PIN; int8_t MOT_3_DIRE
 uint16_t A = 0; // variabile interna
 uint16_t B = 0; // variabile interna
 uint16_t C = 0; // variabile interna
+uint8_t D = 0; // variabile interna
 uint16_t pA = 0; // variabile interna
 uint16_t pB = 0; // variabile interna
 uint16_t pC = 0; // variabile interna

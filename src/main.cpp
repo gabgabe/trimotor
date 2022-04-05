@@ -9,6 +9,7 @@ void systemInitialization(); // esegue l'homing e calcola le distanze massime
 void run();                  // stato di run su dmx, equivale all'on-air di uno studio
 void moveMotors();           // processa i movimenti dei 3 motori
 void processMeasures();      // calcola lo spazio possibile e
+void processMeasures2();     // calcola lo spazio possibile e
 void getDmx();
 bool getDmxPresence();
 void checkCollision();
@@ -43,13 +44,11 @@ boolean debounce(int btnPin, FlexyStepper motorInDebounce)
 }
 boolean homing(FlexyStepper motorToHome, int8_t enPin, int8_t endPin, int8_t direction)
 {
-
-    // motorToHome.libraryReset();
     motorToHome.setCurrentPositionInSteps(0);
-    delay(500);
+    delay(100);
     pinMode(enPin, OUTPUT); // ENABLE MOTOR
     digitalWrite(enPin, LOW);
-    delay(1000);
+    delay(500);
     motorToHome.setAccelerationInMillimetersPerSecondPerSecond(MOT_HOMING_ACCEL);
     motorToHome.setSpeedInMillimetersPerSecond(MOT_HOMING_SPEED / 2);
     while (!debounce(endPin, motorToHome)) // muovi verso endstop e testa while LOW
@@ -99,22 +98,9 @@ void setup()
     digitalWrite(MOT_1_EN_PIN, HIGH);
     digitalWrite(MOT_2_EN_PIN, HIGH);
     digitalWrite(MOT_3_EN_PIN, HIGH);
-    // tickCheckCollision.start();
-    delay(3000);
-    motor3.debug();
-    motor2.debug();
-    motor1.debug();
-
     systemInitialization();
-    Serial.println("BREAK||||||||||||||||||||||||||POST SYS INIT:||||||||||||||||||||||||||");
-    motor3.debug();
-    motor2.debug();
-    motor1.debug();
-    Serial.println("BREAK|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
-
     system_ready = false;
     motors_initialized = false;
-    delay(5000);
 
 markRepeat:
     if (!getDmxPresence())
@@ -125,7 +111,7 @@ markRepeat:
 void loop()
 {
     run();
-    //getDmxPresence();
+    // getDmxPresence();
 }
 void run()
 {
@@ -133,6 +119,7 @@ void run()
     processMeasures(); // processMeasures(motore1, motore2, motore3); || processMeasures(motore1, motore2, motore3, cuscinetto);
     moveMotors();
     checkCollision();
+
 }
 void moveMotors()
 {
@@ -146,12 +133,13 @@ void moveMotors()
 }
 void processMeasures()
 {
-    A = map(A, 0, 65535, A_MIN, A_MAX); // con calcolo cuscinetto
-    B = map(B, 0, 65535, B_MIN, B_MAX); // con calcolo cuscinetto
-    C = map(C, 0, 65535, C_MIN, C_MAX); // con calcolo cuscinetto
-    pA = constrain(A, A_MIN, pB);       // con calcolo cuscinetto
-    pB = constrain(B, pA - 1, pC + 1);  // con calcolo cuscinetto
-    pC = constrain(C, pB, C_MAX);       // con calcolo cuscinetto
+    A = map(A, 0, 65535, A_MIN, A_MAX); // canale dmx in millimetri
+    B = map(B, 0, 65535, B_MIN, B_MAX); // canale dmx in millimetri
+    C = map(C, 0, 65535, C_MIN, C_MAX); // canale dmx in millimetri
+    pA = constrain(A, A_MIN, pB);
+    pB = constrain(B, pA - 1, pC + 1);
+    pC = constrain(C, pB, C_MAX);
+    
 }
 void systemInitialization()
 {
@@ -184,7 +172,7 @@ void systemInitialization()
         }
     }
 
-    delay(1000);
+    delay(500);
 
     motor1.setSpeedInMillimetersPerSecond(MOT_1_SPEED / 2);
     motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED / 2);
@@ -225,6 +213,7 @@ void getDmx()
     A = dmxRx.get16Bit(dmxStartChannel);
     B = dmxRx.get16Bit(dmxStartChannel + 2);
     C = dmxRx.get16Bit(dmxStartChannel + 4);
+    D = dmxRx.get(8);
 }
 bool getDmxPresence()
 {
@@ -277,4 +266,22 @@ void checkCollision()
         delay(2000);
         systemInitialization();
     }
+}
+void processMeasures2()
+{
+    A = map(A, 0, 65535, A_MIN, A_MAX); // canale dmx in millimetri
+    B = map(B, 0, 65535, B_MIN, B_MAX); // canale dmx in millimetri
+    C = map(C, 0, 65535, C_MIN, C_MAX); // canale dmx in millimetri
+    pA = constrain(A, A_MIN, motor2.getCurrentPositionInMillimeters()-50);
+    pB = constrain(B, A_MIN+50, C_MAX-50);
+    pC = constrain(C, motor2.getCurrentPositionInMillimeters()+50, C_MAX);
+    
+/*
+Serial.print("a:");
+Serial.print(motor1.getCurrentPositionInMillimeters());
+Serial.print("  b: ");
+Serial.print(motor2.getCurrentPositionInMillimeters());
+Serial.print("  c: ");
+Serial.println(motor3.getCurrentPositionInMillimeters());
+*/
 }
