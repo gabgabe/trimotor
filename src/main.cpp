@@ -3,7 +3,7 @@
 #include <cstring>
 #include <TeensyDMX.h>
 #include "configurazione.h"
-#include <Ticker.h>
+//#include <Ticker.h>
 
 void systemInitialization(); // esegue l'homing e calcola le distanze massime
 void run();                  // stato di run su dmx, equivale all'on-air di uno studio
@@ -12,7 +12,7 @@ void processMeasures();      // calcola lo spazio possibile e
 void getDmx();
 bool getDmxPresence();
 void checkCollision();
-Ticker tickCheckCollision(checkCollision, 100, 0, MILLIS);
+// Ticker tickCheckCollision(checkCollision, 100, 0, MILLIS);
 
 boolean debounce(int btnPin, FlexyStepper motorInDebounce)
 {
@@ -43,10 +43,13 @@ boolean debounce(int btnPin, FlexyStepper motorInDebounce)
 }
 boolean homing(FlexyStepper motorToHome, int8_t enPin, int8_t endPin, int8_t direction)
 {
+
+    // motorToHome.libraryReset();
     motorToHome.setCurrentPositionInSteps(0);
+    delay(500);
     pinMode(enPin, OUTPUT); // ENABLE MOTOR
     digitalWrite(enPin, LOW);
-    delay(500);
+    delay(1000);
     motorToHome.setAccelerationInMillimetersPerSecondPerSecond(MOT_HOMING_ACCEL);
     motorToHome.setSpeedInMillimetersPerSecond(MOT_HOMING_SPEED / 2);
     while (!debounce(endPin, motorToHome)) // muovi verso endstop e testa while LOW
@@ -65,6 +68,8 @@ boolean homing(FlexyStepper motorToHome, int8_t enPin, int8_t endPin, int8_t dir
     motorToHome.setCurrentPositionInSteps(0);
     if (HOMING_OFFSET > 0)
     {
+        motorToHome.setAccelerationInMillimetersPerSecondPerSecond(MOT_HOMING_ACCEL);
+        motorToHome.setSpeedInMillimetersPerSecond(MOT_HOMING_SPEED / 2);
         motorToHome.moveToPositionInMillimeters(HOMING_OFFSET * direction);
         motorToHome.setCurrentPositionInSteps(0);
     }
@@ -74,7 +79,9 @@ boolean homing(FlexyStepper motorToHome, int8_t enPin, int8_t endPin, int8_t dir
 
 void setup()
 {
-    // Serial.begin(115200);
+    Serial.begin(115200);
+    pinMode(24, OUTPUT); // necessari per abilitare lettura dmx
+    digitalWrite(24, LOW);
     dmxRx.begin();
     motor1.connectToPins(MOT_1_STEP_PIN, MOT_1_DIR_PIN);
     motor2.connectToPins(MOT_2_STEP_PIN, MOT_2_DIR_PIN);
@@ -86,19 +93,28 @@ void setup()
     pinMode(ENDSTOP_MID_UP_PIN, INPUT_PULLUP);
     pinMode(ENDSTOP_MID_DOWN_PIN, INPUT_PULLUP);
     pinMode(ENDSTOP_DOWN_PIN, INPUT_PULLUP);
-    pinMode(24, OUTPUT); // necessari per abilitare lettura dmx
-    digitalWrite(24, LOW);
     pinMode(MOT_1_EN_PIN, OUTPUT); // ENABLE MOTOR 1
     pinMode(MOT_2_EN_PIN, OUTPUT); // ENABLE MOTOR 2
     pinMode(MOT_3_EN_PIN, OUTPUT); // ENABLE MOTOR 3
     digitalWrite(MOT_1_EN_PIN, HIGH);
     digitalWrite(MOT_2_EN_PIN, HIGH);
     digitalWrite(MOT_3_EN_PIN, HIGH);
-    //tickCheckCollision.start();
+    // tickCheckCollision.start();
+    delay(3000);
+    motor3.debug();
+    motor2.debug();
+    motor1.debug();
+
     systemInitialization();
+    Serial.println("BREAK||||||||||||||||||||||||||POST SYS INIT:||||||||||||||||||||||||||");
+    motor3.debug();
+    motor2.debug();
+    motor1.debug();
+    Serial.println("BREAK|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+
     system_ready = false;
     motors_initialized = false;
-    delay(1000);
+    delay(5000);
 
 markRepeat:
     if (!getDmxPresence())
@@ -109,7 +125,7 @@ markRepeat:
 void loop()
 {
     run();
-    getDmxPresence();
+    //getDmxPresence();
 }
 void run()
 {
@@ -139,9 +155,6 @@ void processMeasures()
 }
 void systemInitialization()
 {
-    //motor1.libraryReset();
-    //motor2.libraryReset();
-    //motor3.libraryReset();
 
     A = 0;  // variabile interna
     B = 0;  // variabile interna
@@ -183,7 +196,7 @@ void systemInitialization()
     motor3.setCurrentPositionInSteps(0);
     motor3.moveToPositionInMillimeters(C_MAX / 2 * MOT_3_DIRECTION);
 
-    if (motor3.getCurrentVelocityInStepsPerSecond() > 0)
+    if (motor3.motionComplete())
     {
     }
     // Serial.println("motor 3 moving, motor 2 waiting");
@@ -191,20 +204,21 @@ void systemInitialization()
         motor2.setCurrentPositionInSteps(0);
     motor2.moveToPositionInMillimeters(B_MAX / 2 * MOT_2_DIRECTION);
 
-    if (motor2.getCurrentVelocityInMillimetersPerSecond() > 0)
+    if (motor2.motionComplete())
     {
     }
     // Serial.println("motor 3 moving, motor 2 waiting");
     else
         motor1.setCurrentPositionInSteps(0);
     motor1.moveToPositionInMillimeters(A_MAX / 2 * MOT_1_DIRECTION);
-    if (motor1.getCurrentVelocityInMillimetersPerSecond() > 0)
+    if (motor1.motionComplete())
     {
     }
 
     motor1.setSpeedInMillimetersPerSecond(MOT_1_SPEED);
     motor2.setSpeedInMillimetersPerSecond(MOT_2_SPEED);
     motor3.setSpeedInMillimetersPerSecond(MOT_3_SPEED);
+    delay(1000);
 }
 void getDmx()
 {
@@ -251,9 +265,16 @@ void checkCollision()
         digitalWrite(MOT_1_EN_PIN, HIGH);
         digitalWrite(MOT_2_EN_PIN, HIGH);
         digitalWrite(MOT_3_EN_PIN, HIGH);
+        Serial.println("BREAK||||||||||||||||||||||||||motor 3:||||||||||||||||||||||||||");
+        motor3.debug();
+        Serial.println("BREAK||||||||||||||||||||||||||motor 2:||||||||||||||||||||||||||");
+        motor2.debug();
+        Serial.println("BREAK||||||||||||||||||||||||||motor 1:||||||||||||||||||||||||||");
+        motor1.debug();
+        motor3.libraryReset();
+        motor2.libraryReset();
+        motor1.libraryReset();
         delay(2000);
         systemInitialization();
-
     }
-    delay(1000);
 }

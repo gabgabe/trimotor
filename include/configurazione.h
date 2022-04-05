@@ -20,8 +20,6 @@
 #define ENDSTOP_MID_UP_PIN 2
 #define ENDSTOP_MID_DOWN_PIN 3
 #define ENDSTOP_DOWN_PIN 4
-
-byte DMXPin = 24;
 #endif
 #ifdef PROTO
 // configurazione IO
