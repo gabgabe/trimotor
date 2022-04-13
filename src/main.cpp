@@ -5,6 +5,13 @@
 #include "configurazione.h"
 //#include <Ticker.h>
 
+uint8_t stiCazzi = 0;
+uint16_t As = 0;
+uint16_t Bs = 0;
+uint16_t Cs = 0;
+
+teensydmx::Sender dmxTx{Serial2};
+
 void systemInitialization(); // esegue l'homing e calcola le distanze massime
 void run();                  // stato di run su dmx, equivale all'on-air di uno studio
 void moveMotors();           // processa i movimenti dei 3 motori
@@ -80,8 +87,11 @@ void setup()
 {
     Serial.begin(115200);
     pinMode(24, OUTPUT); // necessari per abilitare lettura dmx
+    pinMode(25, OUTPUT);
     digitalWrite(24, LOW);
+    digitalWrite(25, HIGH);
     dmxRx.begin();
+    dmxTx.begin();
     motor1.connectToPins(MOT_1_STEP_PIN, MOT_1_DIR_PIN);
     motor2.connectToPins(MOT_2_STEP_PIN, MOT_2_DIR_PIN);
     motor3.connectToPins(MOT_3_STEP_PIN, MOT_3_DIR_PIN);
@@ -101,6 +111,7 @@ void setup()
     systemInitialization();
     system_ready = false;
     motors_initialized = false;
+    motor1.getCurrentPositionInMillimeters();
 
 markRepeat:
     if (!getDmxPresence())
@@ -214,6 +225,15 @@ void getDmx()
     B = dmxRx.get16Bit(dmxStartChannel + 2);
     C = dmxRx.get16Bit(dmxStartChannel + 4);
     D = dmxRx.get(8);
+    
+    
+    As = map(-1*motor1.getCurrentPositionInMillimeters(), 0, 1800, 0, 65535);
+    dmxTx.set16Bit(1,As);
+    Bs = map(motor2.getCurrentPositionInMillimeters(), 0, 1800, 0, 65535);
+    dmxTx.set16Bit(3,Bs);
+    Cs = map(motor3.getCurrentPositionInMillimeters(), 0, 1800, 0, 65535);
+    dmxTx.set16Bit(5,Cs);
+
 }
 bool getDmxPresence()
 {
